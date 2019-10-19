@@ -1,0 +1,78 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_agentAddress",
+				"type": "address"
+			},
+			{
+				"name": "_command",
+				"type": "string"
+			},
+			{
+				"name": "_oceanDid",
+				"type": "bytes"
+			},
+			{
+				"name": "_callback",
+				"type": "bytes4"
+			}
+		],
+		"name": "createQuery",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_queryContract",
+				"type": "address"
+			},
+			{
+				"name": "_result",
+				"type": "uint256[]"
+			}
+		],
+		"name": "updateQuery",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "agentAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "command",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "oceanDid",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"name": "queryContract",
+				"type": "address"
+			}
+		],
+		"name": "QueryCreated",
+		"type": "event"
+	}
+]

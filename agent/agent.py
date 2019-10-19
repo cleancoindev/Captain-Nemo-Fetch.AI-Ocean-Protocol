@@ -9,7 +9,7 @@ def create_ocean_request(query):
     pass
 
 def process_response(response):
-	pass
+    pass
 
 def sign_response(message):
     signed_message = w3.eth.account.sign_message(message, private_key=private_key)
@@ -28,9 +28,12 @@ def to_32byte_hex(val):
 
 def main_loop():
     length = 0
+    print('starting agent main loop')
     while True:
-        event_filter = contract.events.QueryCreated.createFilter(fromBlock=0)
-        print(event_filter.get_all_entries())
+        event_filter = contract.events.QueryCreated.createFilter(fromBlock="latest")
+        
+        event_filter.get_new_entries()
+        
         if length < len(event_filter.get_all_entries()):
             event_args = event_filter.get_all_entries()[-1]["args"]
             query = event_args["query"]
@@ -51,17 +54,20 @@ def main_loop():
 
         time.sleep(2)
 
+
+
+
 if __name__ == '__main__':
 
-    w3 = Web3(Web3.HTTPProvider("http://ropsten.infura.io/v3/4eb906a46726439288d56efaa45fc89a"))
+    w3 = Web3(Web3.HTTPProvider("https://ropsten.infura.io/v3/4eb906a46726439288d56efaa45fc89a"))
 
-    with open('~/.ethereum/keystore/UTC--...--5ce9454909639D2D17A3F753ce7d93fa0b9aB12E') as keyfile:
+    with open('../keystore/UTC--2019-10-19T15-13-02.082157851Z--719b682d53f15899376709fb372c98aa5a116799') as keyfile:
         encrypted_key = keyfile.read()
-        private_key = w3.eth.account.decrypt(encrypted_key, 'correcthorsebatterystaple')
+        private_key = w3.eth.account.decrypt(encrypted_key, 'submarine')
 
-    contract_address = ''
+    contract_address = '0x4B04928c8beEF8848920a8BA63176B7aB5Fc87e2'
     contractAddress = Web3.toChecksumAddress(contract_address)
-    account =  w3.eth.account.from_key(private_key)
+    account =  w3.eth.account.privateKeyToAccount(private_key)
     w3.eth.defaultAccount = account.address
 
     with open("abi.json") as f:

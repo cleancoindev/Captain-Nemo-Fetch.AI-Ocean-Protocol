@@ -64,9 +64,9 @@ contract TestCase {
     /**
      * @dev Creates a query.
      */
-    function queryAgentAt(address _agentAddress, string _command, bytes _oceanDid) public {
+    function queryAgentAt(address _agentAddress, string memory _command, bytes memory _oceanDid) public {
         bytes4 _callback = bytes4(keccak256("resultCallback(uint256[])"));
-        submarine.createQuery (agentAddress, _command, _oceanDid, _callback)
+        submarine.createQuery (_agentAddress, _command, _oceanDid, _callback);
     }
     
     /**
