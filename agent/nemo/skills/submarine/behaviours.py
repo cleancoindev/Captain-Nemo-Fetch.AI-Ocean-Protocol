@@ -37,7 +37,7 @@ class SubmarineBehaviour(Behaviour):
         """Set up the behaviour."""
         #logger.info("Submarine Behaviour: setup method called.")
         self.orders_book = {}
-        self.events_number = 0
+        self.events_number = 5
         self.active_query = None
 
     def act(self, contract, address) -> None:
@@ -52,13 +52,14 @@ class SubmarineBehaviour(Behaviour):
                 agentAddress = event_args["agentAddress"]
                 oceanDid = event_args["oceanDid"]
                 queryContract = event_args["queryContract"]
-                print('data', self.orders_book)
+                
                 if agentAddress == address:
                     if queryContract in self.orders_book:
                         self.orders_book[queryContract].append({"command" : command, "did" : oceanDid})
                     else:
                         self.orders_book[queryContract] = [{"command" : command, "did" : oceanDid}]
                     self.active_query = {"contract" : queryContract, "command" : command, "did" : oceanDid}
+                    print('new query', self.active_query)
             self.events_number += 1# len(event_filter.get_all_entries())#maybe dont need this
 
         time.sleep(1)

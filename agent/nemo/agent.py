@@ -26,7 +26,7 @@ from abc import abstractmethod, ABC
 from enum import Enum
 from typing import Optional
 
-from aea.crypto.wallet import Wallet
+#from aea.crypto.wallet import Wallet
 from aea.mail.base import InBox, OutBox, MailBox
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class Agent(ABC):
     """This class implements a template agent."""
 
     def __init__(self, name: str,
-                 wallet: Wallet,
+                 #wallet: Wallet,
                  timeout: float = 1.0,
                  debug: bool = False) -> None:
         """
@@ -71,7 +71,7 @@ class Agent(ABC):
         :return: None
         """
         self._name = name
-        self._wallet = wallet
+        #self._wallet = wallet
         self._liveness = Liveness()
         self._timeout = timeout
 
@@ -96,10 +96,10 @@ class Agent(ABC):
         """Get the agent name."""
         return self._name
 
-    @property
-    def wallet(self) -> Wallet:
-        """Get the wallet."""
-        return self._wallet
+    # @property
+    # def wallet(self) -> Wallet:
+    #     """Get the wallet."""
+    #     return #self._wallet
 
     @property
     def liveness(self) -> Liveness:

@@ -22,9 +22,9 @@ import logging, os
 from pathlib import Path
 from typing import Optional, cast
 
-from aea.agent import Agent
+from agent import Agent
 from aea.context.base import AgentContext
-from aea.crypto.wallet import Wallet
+#from aea.crypto.wallet import Wallet
 from aea.decision_maker.base import DecisionMaker
 from aea.mail.base import Envelope, MailBox
 from aea.registries.base import Resources
@@ -47,7 +47,7 @@ class Nemo(Agent):
     """This class implements an autonomous economic agent."""
 
     def __init__(self, name: str,
-                 wallet: Wallet,
+                 #wallet: Wallet,
                  timeout: float = 1.0,
                  debug: bool = False) -> None:
         """
@@ -60,7 +60,7 @@ class Nemo(Agent):
 
         :return: None
         """
-        super().__init__(name=name, wallet=wallet, timeout=timeout, debug=debug)
+        super().__init__(name=name, timeout=timeout, debug=debug)
         self._directory = ""
         self._resources = None  # type: Optional[Resources]
         
@@ -141,13 +141,16 @@ class Nemo(Agent):
         """
         nonce = self.w3.eth.getTransactionCount(self.account.address)  
         query = self.eventBehaviour.active_query
-        self.resultTask.execute(self.contract, query, nonce)
+        if query:
+            self.resultTask.execute(self.contract, query, nonce)
+            self.eventBehaviour.active_query = None
         
         if self.resultTask.query_txn:
-            signed_txn = self.w3.eth.account.sign_transaction(self.resultTask.query_txn, private_key=self.private_key)
+            print("sending transaction", self.resultTask.query_txn)
+            signed_txn = self.w3.eth.account.signTransaction(self.resultTask.query_txn, private_key=self.private_key)
             self.w3.eth.sendRawTransaction(signed_txn.rawTransaction)
             self.resultTask.query_txn = None
-            print("transaction sent", self.resultTask.query_txn)
+            
             time.sleep(3)
        
     def teardown(self) -> None:
@@ -165,13 +168,12 @@ if __name__ == '__main__':
 
     agent_name = "Submarine"
     private_key_pem_path = "default_private_key.pem"
-    wallet = Wallet({'default': private_key_pem_path})
-    public_key = wallet.public_keys['default']
+    #wallet = Wallet({'default': private_key_pem_path})
+    #public_key = wallet.public_keys['default']
 
     
    
 
     agent = Nemo(
-        agent_name,
-        wallet)
+        agent_name)
     agent.start()

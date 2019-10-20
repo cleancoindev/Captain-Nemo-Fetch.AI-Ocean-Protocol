@@ -1,39 +1,34 @@
-import logging
 import os
-from squid_py import Metadata, Ocean
-import squid_py
-import mantaray_utilities as manta_utils
+import time
 
-# Setup logging
+from squid_py import (
+    Ocean,
+    ConfigProvider,
+    Config
+)
 
-from squid_py import Config
-from squid_py.keeper import Keeper
-from pathlib import Path
-import datetime
-import web3
-import asyncio
+ConfigProvider.set_config(Config('config.ini'))
+# Make a new instance of Ocean
+ocean = Ocean() # or Ocean(Config('config.ini'))
+config = ocean.config
+# make account instance, assuming the ethereum account and password are set 
+# in the config file `config.ini`
+account = ocean.accounts.list()[0]
 
-# Get the configuration file path for this environment
-OCEAN_CONFIG_PATH = Path(os.environ['OCEAN_CONFIG_PATH'])
-assert OCEAN_CONFIG_PATH.exists(), "{} - path does not exist".format(OCEAN_CONFIG_PATH)
+print('account', account)
 
-# The Market Place will be delegated to provide access to your assets, so we need the address
-MARKET_PLACE_PROVIDER_ADDRESS = os.environ['MARKET_PLACE_PROVIDER_ADDRESS']
+did = 'did:op:71fae96b1d9a4651ba0d3946603fb4c11deb724685f64780985ce32ea2dfe517'
+service_agreement_id = ocean.assets.order(did, 0, account)
 
-logging.critical("Configuration file selected: {}".format(OCEAN_CONFIG_PATH))
-logging.critical("Deployment type: {}".format(manta_utils.config.get_deployment_type()))
-logging.critical("Squid API version: {}".format(squid_py.__version__))
-logging.info("MARKET_PLACE_PROVIDER_ADDRESS:{}".format(MARKET_PLACE_PROVIDER_ADDRESS))
+# after a short wait (seconds to minutes) the asset data files should be available in the `downloads.path` defined in config
+# wait a bit to let things happen
 
-# Instantiate Ocean with the default configuration file.
-configuration = Config(OCEAN_CONFIG_PATH)
-squid_py.ConfigProvider.set_config(configuration)
-ocn = Ocean(configuration)
+print(service_agreement_id)
+time.sleep(20)
 
-publisher_account = manta_utils.user.get_account_by_index(ocn,0)
+# Asset files are saved in a folder named after the asset id
+dataset_dir = os.path.join(ocean.config.downloads_path, f'datafile.{asset_ddo.asset_id}.0')
+if os.path.exists(dataset_dir):
+    print('asset files downloaded: {}'.format(os.listdir(dataset_dir)))
 
-Did_bitcoin = 'did:op:71fae96b1d9a4651ba0d3946603fb4c11deb724685f64780985ce32ea2dfe517'
 
-print(ocn.assets.resolve(Did_bitcoin))
-
-service_agreement_id = ocn.assets.order(Did_bitcoin, 0, publisher_account)
