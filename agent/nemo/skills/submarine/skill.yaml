@@ -1,0 +1,26 @@
+name: submarine
+authors: Alessandro Ricottone, Maxime Gagnebin
+version: 0.1.0
+license: Apache 2.0
+description: "The submarine skill implements interaction with the Ocean protocol."
+url: ""
+behaviours:
+  - behaviour:
+      class_name: SubmarineBehaviour
+      args:
+        foo: bar
+handlers:
+  - handler:
+      class_name: SubmarineHandler
+      args:
+        foo: bar
+        bar: foo
+tasks:
+  - task:
+      class_name: SubmarineTask
+      args:
+        foo: bar
+        bar: foo
+shared_classes: []
+protocols: ["default"]
+dependencies: []

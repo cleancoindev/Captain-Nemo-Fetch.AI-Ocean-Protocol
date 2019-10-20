@@ -28,7 +28,8 @@ pragma solidity ^0.5.0;
 contract Submarine {
 
     event QueryCreated(address agentAddress, string command, bytes oceanDid, address queryContract);
-    mapping (address => mapping (address => bytes4) ) queryBook;
+    mapping (address => mapping (address => bytes4) ) public queryBook;
+    mapping (address => mapping (address => bytes4) ) public paymentsBook;
     
     
     /**
@@ -39,6 +40,7 @@ contract Submarine {
     * @param _callback The callback method to call on the query contract.
     */
     function createQuery (address _agentAddress, string calldata _command, bytes calldata _oceanDid, bytes4 _callback) external {
+        //require(queryBook[msg.sender][_agentAddress] == "");
         emit QueryCreated(_agentAddress, _command, _oceanDid, msg.sender);
         queryBook[msg.sender][_agentAddress] = _callback;
     }
@@ -50,7 +52,7 @@ contract Submarine {
     */
     function updateQuery(address _queryContract,  uint[] memory _result) public returns (bool){
         bytes4 _callback = queryBook[_queryContract][msg.sender];
-        require (_callback == "");
+        require (_callback != "");
         (bool status,) = _queryContract.call(abi.encodePacked(_callback, uint(32), uint(_result.length), _result));
         queryBook[_queryContract][msg.sender] = "";
         require(status, "Failed callback");

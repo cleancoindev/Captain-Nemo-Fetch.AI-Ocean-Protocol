@@ -5,10 +5,7 @@ import squid_py
 import mantaray_utilities as manta_utils
 
 # Setup logging
-from mantaray_utilities.user import get_account_from_config
-from mantaray_utilities.events import subscribe_event
-manta_utils.logging.logger.setLevel('INFO')
-import mantaray_utilities as manta_utils
+
 from squid_py import Config
 from squid_py.keeper import Keeper
 from pathlib import Path
