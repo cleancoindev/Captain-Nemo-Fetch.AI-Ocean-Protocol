@@ -8,7 +8,7 @@ import json
 def create_ocean_request(query):
     pass
 
-def process_response(response):
+def process_response(response,command):
     pass
 
 def prepare_tx(fun):
