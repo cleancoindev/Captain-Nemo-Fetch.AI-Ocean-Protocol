@@ -34,14 +34,15 @@ def main_loop():
             event_args = event_filter.get_all_entries()[-1]["args"]
             command = event_args["command"]
             agentAddress = event_args["agentAddress"]
-            oceanDid = event_args["oceanDid"]
+            #oceanDid = event_args["oceanDid"]
+            oceanDid = did:op:c828b1ce95d8405b959c743bfbd2ea72daa8b4dd257d4865b6a548e095e5fe7f
             queryContract = event_args["queryContract"]
             print('data', command, agentAddress, oceanDid)
             if agentAddress == w3.eth.defaultAccount:
                 time.sleep(2)
                 continue
-                response = create_ocean_request({"command" : command, "did" : oceanDid})
-                result = process_response(response)
+                response = create_ocean_request(oceanDid)
+                result = process_response(response, command)
                 updateQuery = contract.functions.updateQuery(queryContract, result)
             
                 signed_txn = prepare_tx(updateQuery)
