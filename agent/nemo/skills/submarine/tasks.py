@@ -24,8 +24,8 @@ import time
 from aea.skills.base import Task
 
 logger = logging.getLogger("aea.echo_skill")
-
-
+from numpy import genfromtxt
+from sklearn.linear_model import LogisticRegression
 
 
 
@@ -41,6 +41,7 @@ class SubmarineTask(Task):
         """Set up the task."""
         logger.info("Submarine Task: setup method called.")
         self.query_txn = None
+        self.model = LogisticRegression()
 
     def execute(self, contract, query, nonce) -> None:
         """Execute the task."""
@@ -58,10 +59,21 @@ class SubmarineTask(Task):
         logger.info("Submarine Task: teardown method called.")
 
     def create_ocean_request(self, query) -> None:
-        pass
+        filename = '../../ocean/bitcoin_2017.csv'
+
+        my_data = genfromtxt(filename, delimiter=',')
+        print('data at', filename, my_data)
+        return my_data
 
     def process_response(self, response) -> None:
-        return [4,5,6,7,8]
+        X = [response[i][:-1] for i in range(350)]
+        y = [response[i][-1] for i in range(350)]
+
+        self.model.fit(X, y)
+        y_test = self.model.predict_proba([response[i][:-1] for i in range(301,363)])[:,1]
+        mse = ((y_test-[response[i][-1] for i in range(301,363)])**2).mean()
+
+        return y_test[:5]
 
     def prepare_tx(self, updateQuery, nonce):
         
